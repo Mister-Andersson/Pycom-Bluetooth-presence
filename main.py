@@ -5,8 +5,8 @@ import time
 import machine
 import struct
 import ubinascii
-from my_lora_secret import my_app_eui
-from my_lora_secret import my_app_key
+from lora_secrets import my_app_eui
+from lora_secrets import my_app_key
 
 #blu = Bluetooth()
 devs_arr = []
