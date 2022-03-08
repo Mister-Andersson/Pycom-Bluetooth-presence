@@ -10,13 +10,11 @@ from lora_secrets import my_app_key
 
 #blu = Bluetooth()
 devs_arr = []
-#number = 256
-#bytestring = number.to_bytes(2, 'big')
-#bytestring2 = 
-#print("integer {int} in bytes is {bytes}".format(int=number, bytes=bytestring))
 
 # Send only one byte by default unless we need more
 bytes_len = 0x00
+### Using Elsys Payload encoding ###
+# https://www.elsys.se/en/elsys-payload/
 # Encode type to be sent -- TYPE_PULSE1 = 0x0A; //2bytes relative pulse count
 decode_type = 0x0A
 # Initialise LoRa in LORAWAN mode.
@@ -26,8 +24,8 @@ lora = LoRa(mode=LoRa.LORAWAN, region=LoRa.EU868, device_class=LoRa.CLASS_A)
 app_eui = ubinascii.unhexlify(my_app_eui)
 app_key = ubinascii.unhexlify(my_app_key)
 lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
-# wait until the module has joined the network
 
+# wait until the module has joined the network
 while True:
     #lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
     while not lora.has_joined():
@@ -51,26 +49,12 @@ while True:
     s.setblocking(True)
     # send some data
     devs_arr_len = len(devs_arr)
-    #if devs_arr_len > 0:
-    #    if devs_arr_len > 255:
-    #        devs_arr_len -= 255
-    #        bytes_len = 0x01
-        
-    #s.send(bytes([decode_type, bytestring]))
-    #s.send(struct.pack(">H", number))
-    #print(struct.pack(">H", number))
-    #s.send(bytes([decode_type, bytes(bytestring)]))
-    #s.send(decode_type, bytestring)
-    #s.send(bytes([decode_type, bytes_len, devs_arr_len]))
     s.send(struct.pack('!bH', decode_type, devs_arr_len))
     print("Bluetooth-Devices: ",devs_arr_len)
     #print(devs_arr)
     for i in devs_arr:
         print(i)
     del devs_arr[:]
-    #print(bytes_arr)
-    #devs_arr = []
-    #bytes_len = 0x00
     # make the socket non-blocking
     # (because if there's no data received it will block forever...)
     s.setblocking(False)
@@ -79,8 +63,6 @@ while True:
     if data:
         print(data)
     # Sleep
-    print("Going to sleep mode... ")
-    #print("Going to sleep mode... " + str(time.ticks_ms()))
+    # print("Going to sleep mode... ")
     time.sleep(600)
     #machine.sleep(36000, False)
-    #print("Waking up... "+ str(time.ticks_ms()))
